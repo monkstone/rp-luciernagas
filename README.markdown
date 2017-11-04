@@ -1,9 +1,11 @@
 # Luciérnagas
 
-Proyecto de Ruby-Processing creado para el [Viernes de Ilustración][1] de julio 2011 con el tema [Tropical][2]
+Proyecto de Ruby-Processing creado para el Viernes de Ilustración de julio 2011 con el tema Tropical
 
 *   [Instrucciones de instalación de Ruby-Processing](https://github.com/jashkenas/ruby-processing/wiki/Getting-Started)
 
+# Fireflies
 
-[1]: http://viernesdeilustracion.com/
-[2]: http://viernesdeilustracion.com/index.php/vdi/category/6-julio
+Translated for [JRubyArt][jruby_art]
+
+[jruby_art]:https://github.com/ruby-processing/JRubyArt
