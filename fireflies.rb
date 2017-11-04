@@ -66,22 +66,21 @@ def draw_flies
       fly.to_pos = find_spot_near fly.pos, @spot_distance
     end
     # set new rotation
-    to_rotation = atan2 fly.to_pos.y - fly.pos.y, fly.to_pos.x - fly.pos.x
+    to_rotation = (fly.to_pos - fly.pos).heading
     to_rotation = find_nearest_rotation(fly.rotation, to_rotation)
     # rotate to new direction
     if fly.rotation < to_rotation
-      fly.rotation = fly.rotation + rotation_max
+      fly.rotation += rotation_max
       fly.rotation = to_rotation if fly.rotation > to_rotation
     else
-      fly.rotation = fly.rotation - rotation_max
+      fly.rotation -= rotation_max
       fly.rotation = to_rotation if fly.rotation < to_rotation
     end
     # add tail position
     fly.positions << Vec2D.new(fly.pos.x, fly.pos.y)
     fly.positions.shift while fly.positions.size > @tail_length
     # set fly position
-    fly.pos.x = fly.pos.x + @speed * cos(fly.rotation)
-    fly.pos.y = fly.pos.y + @speed * sin(fly.rotation)
+    fly.pos += Vec2D.from_angle(fly.rotation) * @speed
     # draw fly tail
     draw_tail fly.positions
     # draw fly
