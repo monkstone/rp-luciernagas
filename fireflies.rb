@@ -1,8 +1,6 @@
 # Fireflies
-
 load_library :control_panel
-
-COL_NAME = %w{sand rain green water black light}
+COL_NAME = %w[sand rain green water black light].freeze
 COL_HEX = [0xF2E8C4, 0x98D9B6, 0x3EC9A7, 0x2B879E, 0x616668, 0xc9f202]
 PALETTE = COL_NAME.zip(COL_HEX).to_h
 
@@ -30,7 +28,6 @@ def setup
   @spot = load_image(data_path('spot.png'))
   @spots = load_spots(spot, 4)
   reset!
-
 end
 
 def reset!
@@ -53,32 +50,24 @@ def draw_lights
   @flies.each do |fly|
     lights.push_matrix
     lights.translate fly.pos.x, fly.pos.y
-    lights.image @spotlight, -@spotlight.width/2, -@spotlight.height/2
+    lights.image @spotlight, -@spotlight.width / 2, -@spotlight.height / 2
     lights.pop_matrix
   end
-
   lights.end_draw
   @spot.mask lights
   image spot, 0, 0
-
-
 end
 
 def draw_flies
-
-  rotation_max = @rotation_max/100 * TWO_PI
-
+  rotation_max = @rotation_max / 100 * TWO_PI
   @flies.each do |fly|
-
     # check if point reached
     if fly.pos.dist(fly.to_pos) < @target_radius
       fly.to_pos = find_spot_near fly.pos, @spot_distance
     end
-
     # set new rotation
     to_rotation = atan2 fly.to_pos.y - fly.pos.y, fly.to_pos.x - fly.pos.x
     to_rotation = find_nearest_rotation(fly.rotation, to_rotation)
-
     # rotate to new direction
     if fly.rotation < to_rotation
       fly.rotation = fly.rotation + rotation_max
@@ -87,20 +76,14 @@ def draw_flies
       fly.rotation = fly.rotation - rotation_max
       fly.rotation = to_rotation if fly.rotation < to_rotation
     end
-
     # add tail position
     fly.positions << Vec2D.new(fly.pos.x, fly.pos.y)
-    while fly.positions.size > @tail_length
-      fly.positions.shift
-    end
-
+    fly.positions.shift while fly.positions.size > @tail_length
     # set fly position
     fly.pos.x = fly.pos.x + @speed * cos(fly.rotation)
     fly.pos.y = fly.pos.y + @speed * sin(fly.rotation)
-
     # draw fly tail
     draw_tail fly.positions
-
     # draw fly
     no_stroke
     fill 201, 242, 2
@@ -108,7 +91,6 @@ def draw_flies
     translate fly.pos.x, fly.pos.y
     ellipse 0, 0, 5, 5
     pop_matrix
-
   end
 end
 
@@ -122,19 +104,13 @@ def create_fly
 end
 
 def draw_tail(positions)
-
-  if positions && positions.size > 0
-
-    alpha_add = (255/positions.size)
-
-    positions.each_with_index do |position, i|
-      stroke(255, i * alpha_add)
-      return unless i < positions.size - 2
-      line(position.x, position.y, positions[i + 1].x, positions[i + 1].y)
-    end
-
+  return unless positions && !positions.empty?
+  alpha_add = 255 / positions.size
+  positions.each_with_index do |position, i|
+    stroke(255, i * alpha_add)
+    next unless i < positions.size - 2
+    line(position.x, position.y, positions[i + 1].x, positions[i + 1].y)
   end
-
 end
 
 def load_spots(spot_image, accuracy = 4)
@@ -154,35 +130,28 @@ end
 
 def find_spot_near(position, distance)
   spot = nil
-  until spot && spot.dist(position) < distance
-    spot = rand_spot
-  end
+  spot = rand_spot until spot && spot.dist(position) < distance
   spot
 end
 
 def find_nearest_rotation(from, to)
-
-  dif = (to - from) % TWO_PI;
+  dif = (to - from) % TWO_PI
   if dif != dif % PI
-    dif = (dif < 0) ? dif + TWO_PI : dif - TWO_PI;
+    dif = dif < 0 ? dif + TWO_PI : dif - TWO_PI
   end
-
   from + dif
-
 end
 
 def create_spotlight
   size = 60
-
   spotlight = create_graphics size, size, P2D
   spotlight.begin_draw
   spotlight.no_stroke
   spotlight.fill 255, 60
-  #spotlight.fill 255, 40
+  # spotlight.fill 255, 40
   half_size = size / 2
   spotlight.ellipse half_size, half_size, half_size, half_size
   spotlight.filter BLUR, 4
   spotlight.end_draw
   spotlight
-
 end
