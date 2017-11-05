@@ -82,7 +82,7 @@ def draw_flies
     # set fly position
     fly.pos += Vec2D.from_angle(fly.rotation) * @speed
     # draw fly tail
-    draw_tail fly.positions
+    draw_trail fly.positions
     # draw fly
     no_stroke
     fill 201, 242, 2
@@ -102,7 +102,7 @@ def create_fly
   Fly.new(spot, to_spot, rotation, [])
 end
 
-def draw_tail(positions)
+def draw_trail(positions)
   return unless positions && !positions.empty?
   alpha_add = 255 / positions.size
   positions.each_with_index do |position, i|
@@ -149,7 +149,7 @@ def create_spot
   glow.fill 255, 60
   # glow.fill 255, 40
   glow.ellipse size / 2, size / 2, size, size
-  glow.filter BLUR, 4
+  glow.filter BLUR, 6
   glow.end_draw
   glow
 end

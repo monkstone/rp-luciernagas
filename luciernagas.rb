@@ -27,7 +27,7 @@ def setup
   @hide = false
   @spotlight = create_spotlight
   @background = load_image(data_path('background.png'))
-  @spot = load_image(data_path('spot.png'))
+  @spot = load_image(data_path('mask.png'))
   @spots = load_spots(spot, 4)
   reset!
 
