@@ -4,7 +4,7 @@ COL_NAME = %w[sand rain green water black light].freeze
 COL_HEX = [0xF2E8C4, 0x98D9B6, 0x3EC9A7, 0x2B879E, 0x616668, 0xc9f202]
 PALETTE = COL_NAME.zip(COL_HEX).to_h
 
-attr_reader :panel, :hide, :spot
+attr_reader :panel, :hide, :mask_image, :flies
 
 def settings
   size 1024, 480, P2D
@@ -23,10 +23,10 @@ def setup
     @panel = c
   end
   @hide = false
-  @spotlight = create_spotlight
+  @spot_image = create_spotlight
   @background = load_image(data_path('background.png'))
-  @spot = load_image(data_path('spot.png'))
-  @spots = load_spots(spot, 4)
+  @mask_image = load_image(data_path('mask.png'))
+  @spots = load_spots(mask_image, 4)
   reset!
 end
 
@@ -47,20 +47,20 @@ end
 def draw_lights
   lights = create_graphics width, height, P2D
   lights.begin_draw
-  @flies.each do |fly|
+  flies.each do |fly|
     lights.push_matrix
     lights.translate fly.pos.x, fly.pos.y
-    lights.image @spotlight, -@spotlight.width / 2, -@spotlight.height / 2
+    lights.image @spot_image, 0, 0
     lights.pop_matrix
   end
   lights.end_draw
-  @spot.mask lights
-  image spot, 0, 0
+  mask_image.mask lights
+  image mask_image, 0, 0
 end
 
 def draw_flies
   rotation_max = @rotation_max / 100 * TWO_PI
-  @flies.each do |fly|
+  flies.each do |fly|
     # check if point reached
     if fly.pos.dist(fly.to_pos) < @target_radius
       fly.to_pos = find_spot_near fly.pos, @spot_distance
@@ -112,13 +112,13 @@ def draw_tail(positions)
   end
 end
 
-def load_spots(spot_image, accuracy = 4)
+def load_spots(mask, accuracy = 4)
   spots = []
-  spot_image.load_pixels
-  corner_color = spot_image.pixels[0]
-  grid(spot_image.width, spot_image.height, accuracy, accuracy) do |x, y|
-    color = spot_image.pixels[y * spot_image.width + x]
-    spots << Vec2D.new(x, y) unless color == corner_color
+  mask.load_pixels
+  corner_color = mask.pixels[0]
+  grid(mask.width, mask.height, accuracy, accuracy) do |x, y|
+    next if mask.pixels[y * mask.width + x] == corner_color
+    spots << Vec2D.new(x, y)
   end
   spots
 end
@@ -142,15 +142,14 @@ def find_nearest_rotation(from, to)
 end
 
 def create_spotlight
-  size = 60
-  spotlight = create_graphics size, size, P2D
-  spotlight.begin_draw
-  spotlight.no_stroke
-  spotlight.fill 255, 60
-  # spotlight.fill 255, 40
-  half_size = size / 2
-  spotlight.ellipse half_size, half_size, half_size, half_size
-  spotlight.filter BLUR, 4
-  spotlight.end_draw
-  spotlight
+  size = 30
+  spot_image = create_graphics size, size, P2D
+  spot_image.begin_draw
+  spot_image.no_stroke
+  spot_image.fill 255, 60
+  # spot_image.fill 255, 40
+  spot_image.ellipse size / 2, size / 2, size, size
+  spot_image.filter BLUR, 4
+  spot_image.end_draw
+  spot_image
 end
