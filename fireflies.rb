@@ -4,7 +4,7 @@ COL_NAME = %w[sand rain green water black light].freeze
 COL_HEX = [0xF2E8C4, 0x98D9B6, 0x3EC9A7, 0x2B879E, 0x616668, 0xc9f202]
 PALETTE = COL_NAME.zip(COL_HEX).to_h
 
-attr_reader :panel, :hide, :mask_image, :flies
+attr_reader :panel, :hide, :mask_image, :flies, :spot_image
 
 def settings
   size 1024, 480, P2D
@@ -23,7 +23,7 @@ def setup
     @panel = c
   end
   @hide = false
-  @spot_image = create_spotlight
+  @spot_image = create_spot
   @background = load_image(data_path('background.png'))
   @mask_image = load_image(data_path('mask.png'))
   @spots = load_spots(mask_image, 4)
@@ -50,7 +50,7 @@ def draw_lights
   flies.each do |fly|
     lights.push_matrix
     lights.translate fly.pos.x, fly.pos.y
-    lights.image @spot_image, 0, 0
+    lights.image spot_image, 0, 0
     lights.pop_matrix
   end
   lights.end_draw
@@ -141,15 +141,15 @@ def find_nearest_rotation(from, to)
   from + dif
 end
 
-def create_spotlight
+def create_spot
   size = 30
-  spot_image = create_graphics size, size, P2D
-  spot_image.begin_draw
-  spot_image.no_stroke
-  spot_image.fill 255, 60
-  # spot_image.fill 255, 40
-  spot_image.ellipse size / 2, size / 2, size, size
-  spot_image.filter BLUR, 4
-  spot_image.end_draw
-  spot_image
+  glow = create_graphics size, size, P2D
+  glow.begin_draw
+  glow.no_stroke
+  glow.fill 255, 60
+  # glow.fill 255, 40
+  glow.ellipse size / 2, size / 2, size, size
+  glow.filter BLUR, 4
+  glow.end_draw
+  glow
 end
