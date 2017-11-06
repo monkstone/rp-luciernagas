@@ -70,7 +70,7 @@ def draw_flies
     draw_trail fly.positions
     # draw fly
     no_stroke
-    fill 201, 242, 2
+    fill 255, 255, 0
     push_matrix
     translate fly.pos.x, fly.pos.y
     ellipse 0, 0, 5, 5

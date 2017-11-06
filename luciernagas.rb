@@ -2,9 +2,9 @@
 
 load_library :control_panel
 
-COL_NAME = %w{sand rain green water black light}
-COL_HEX = [0xF2E8C4, 0x98D9B6, 0x3EC9A7, 0x2B879E, 0x616668, 0xc9f202]
-PALETTE = COL_NAME.zip(COL_HEX).to_h
+# COL_NAME = %w{sand rain green water black light}
+# COL_HEX = [0xF2E8C4, 0x98D9B6, 0x3EC9A7, 0x2B879E, 0x616668, 0xc9f202]
+# PALETTE = COL_NAME.zip(COL_HEX).to_h
 
 attr_reader :panel, :hide, :spot
 
