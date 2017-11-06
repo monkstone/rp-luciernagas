@@ -11,6 +11,7 @@ end
 def setup
   sketch_title 'Fireflies'
   control_panel do |c|
+    c.look_feel 'Nimbus'
     c.slider(:speed, 0..20, 5)
     c.slider(:tail_length, 0..400, 30)
     c.slider(:rotation_max, 0..30, 7)
