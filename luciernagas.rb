@@ -1,4 +1,8 @@
 # Luciernagas
+# After an original by Marcel Miranda aka reaktivo
+# https://github.com/reaktivo/rp-luciernagas
+# translated and updated by Martin Prout for JRubyArt
+# features use of Vec2D class and grid method
 load_library :control_panel
 
 attr_reader :panel, :hide, :image_mask, :spots
